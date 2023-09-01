@@ -5,6 +5,13 @@ use std::ptr;
 use libc::{ifaddrs, sockaddr, sockaddr_in, AF_INET, getifaddrs, freeifaddrs};
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() != 2 || args[1] != "show" {
+        eprintln!("Usage: netnfi show");
+        std::process::exit(1);
+    }
+
     let mut ifa_list: *mut ifaddrs = ptr::null_mut();
     
     // Get a linked list of network interfaces and their addresses
