@@ -1,6 +1,7 @@
 extern crate libc;
 extern crate clap;
 
+
 use std::net::{IpAddr, Ipv4Addr};
 use std::ptr;
 use libc::{ifaddrs, sockaddr, sockaddr_in, AF_INET, getifaddrs, freeifaddrs};
@@ -11,15 +12,30 @@ fn is_interface_up(ifa_flags: libc::c_uint) -> bool {
     (ifa_flags & libc::IFF_UP as libc::c_uint) != 0
 }
 
+fn count_active_interfaces(ifa_list: *mut ifaddrs) -> usize {
+    let mut count = 0;
+    let mut ifa = ifa_list;
+
+    while !ifa.is_null() {
+        let ifa_flags = unsafe { (*ifa).ifa_flags };
+        if is_interface_up(ifa_flags) {
+            count += 1;
+        }
+        ifa = unsafe { (*ifa).ifa_next };
+    }
+
+    count
+}
+
 fn main() {
     let matches = App::new("netnfi")
         .version("1.0")
-        .author("Your Name")
+        .author("Alex Harttree")
         .about("Display network interface information")
         .arg(Arg::with_name("mode")
             .help("Display mode: brief or all")
             .required(true)
-            .possible_values(&["brief", "all"])
+            .possible_values(&["brief", "all", "count"])
             .index(1))
         .get_matches();
 
@@ -50,6 +66,10 @@ fn main() {
                         ip
                     );
                 }
+		"count" => {
+		    let active_count = count_active_interfaces(ifa_list);
+             	    println!("Active Interfaces: {}", active_count);
+		}
                 "all" => {
                     println!("Interface: {} - IP Address: {:?} - Status: {}", 
                         unsafe { std::ffi::CStr::from_ptr(ifa_name).to_str().unwrap() }, 
