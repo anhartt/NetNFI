@@ -1,4 +1,13 @@
 # NetNFI
-# A rust command line program that aims to simplify and expand upon ifconfig
+NetNFi is a lightweight rust command line utiliy that simplifies and expands upon ifconfig. 
+
+# Installation
+
+# Usage
+
+# Author
+Alex Harttree
+
+
 
 
