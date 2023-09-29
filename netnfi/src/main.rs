@@ -107,15 +107,8 @@ fn main() {
                                                  unsafe { std::ffi::CStr::from_ptr(ifa_name).to_str().unwrap() }, 
                                                  ip
                                         );
-                                    } else if family == AF_INET6 {
-                                        let sockaddr_in6 = unsafe { &*(unsafe { (*ifa).ifa_addr as *const sockaddr_in6 }) };
-                                        let ip = IpAddr::V6(Ipv6Addr::from(sockaddr_in6.sin6_addr.s6_addr));
-                                        println!("Interface: {} - IPv6 Address: {:?}", 
-                                                 unsafe { std::ffi::CStr::from_ptr(ifa_name).to_str().unwrap() }, 
-                                                 ip
-                                        );
-                                    }
-                                }
+                                    }                                 
+				}
                                 "all" => {
                                     if family == AF_INET {
                                         let sockaddr_in = unsafe { &*(unsafe { (*ifa).ifa_addr as *const sockaddr_in }) };
