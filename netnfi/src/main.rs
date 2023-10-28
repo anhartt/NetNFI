@@ -87,7 +87,7 @@ fn main() {
                         let mut ifa_list: *mut ifaddrs = ptr::null_mut();
 
                         if unsafe { getifaddrs(&mut ifa_list) } == -1 {
-                            panic!("Failed to get network interfaces");
+                            panic!("Failed to fetch network interface information");
                         }
 
                         let mut ifa = ifa_list;
