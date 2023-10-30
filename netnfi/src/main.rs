@@ -166,7 +166,7 @@ fn main() {
                                 let sockaddr_in = unsafe { &*(unsafe { (*ifa).ifa_addr as *const sockaddr_in }) };
                                 let ip = IpAddr::V4(Ipv4Addr::from(u32::from_be(sockaddr_in.sin_addr.s_addr)));
                                 println!("{:?}", ip);
-                                break; // Print only the first active interface's IPv4 address
+                                break; // Print only the first active interface's IPv4 address (not working)
                             }
                         }
                         ifa = unsafe { (*ifa).ifa_next };
