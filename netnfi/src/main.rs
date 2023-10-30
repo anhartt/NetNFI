@@ -165,10 +165,7 @@ fn main() {
                             if family == AF_INET {
                                 let sockaddr_in = unsafe { &*(unsafe { (*ifa).ifa_addr as *const sockaddr_in }) };
                                 let ip = IpAddr::V4(Ipv4Addr::from(u32::from_be(sockaddr_in.sin_addr.s_addr)));
-                                println!("Active Interface: {} - IPv4 Address: {:?}", 
-                                         unsafe { std::ffi::CStr::from_ptr(ifa_name).to_str().unwrap() }, 
-                                         ip
-                                );
+                                println!("{:?}", ip);
                                 break; // Print only the first active interface's IPv4 address
                             }
                         }
