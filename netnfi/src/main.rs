@@ -67,6 +67,7 @@ fn main() {
                 .subcommand(App::new("all").about("Show all interface information"))
                 .subcommand(App::new("ipv6").about("Show IPv6 interface information"))
                 .subcommand(App::new("mac").about("Show MAC address"))
+		.subcommand(App::new("activeip").about("Shows the ipv4 address for the active interface"))
         )
         .subcommand(
             App::new("count")
