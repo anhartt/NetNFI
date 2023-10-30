@@ -147,6 +147,36 @@ fn main() {
 
                         unsafe { freeifaddrs(ifa_list) };
                     }
+                "activeip" => {
+                    let mut ifa_list: *mut ifaddrs = ptr::null_mut();
+
+                    if unsafe { getifaddrs(&mut ifa_list) } == -1 {
+                        panic!("Failed to fetch network interface information");
+                    }
+
+                    let mut ifa = ifa_list;
+                    while !ifa.is_null() {
+                        let ifa_name = unsafe { (*ifa).ifa_name };
+                        let ifa_flags = unsafe { (*ifa).ifa_flags };
+
+                        if is_interface_up(ifa_flags) {
+                            let family = unsafe { (*ifa).ifa_addr.as_ref().unwrap().sa_family as i32 };
+
+                            if family == AF_INET {
+                                let sockaddr_in = unsafe { &*(unsafe { (*ifa).ifa_addr as *const sockaddr_in }) };
+                                let ip = IpAddr::V4(Ipv4Addr::from(u32::from_be(sockaddr_in.sin_addr.s_addr)));
+                                println!("Active Interface: {} - IPv4 Address: {:?}", 
+                                         unsafe { std::ffi::CStr::from_ptr(ifa_name).to_str().unwrap() }, 
+                                         ip
+                                );
+                                break; // Print only the first active interface's IPv4 address
+                            }
+                        }
+                        ifa = unsafe { (*ifa).ifa_next };
+                    }
+
+                    unsafe { freeifaddrs(ifa_list) };
+                }
                     "mac" => {
                         if let Some(mac_address) = get_mac_address("eth0") {
                             println!("MAC Address: {}", mac_address);
